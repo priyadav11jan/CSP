@@ -1,0 +1,78 @@
+package com.pangaea.ui;
+
+import org.openqa.selenium.By;
+import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WebElement;
+
+public class LoginPage {
+
+	static WebDriver driver;
+	
+	public LoginPage(WebDriver driver)
+	
+	{
+		this.driver=driver;
+	}
+
+	public static WebElement getUserNameTextBox()
+	{
+		WebElement element= null;
+		
+		try{
+			element= driver.findElement(By.id("username"));
+			
+		}
+		catch(Exception e)
+		{
+			element= driver.findElement(By.name("username"));
+			
+		}
+		
+		
+		return element;
+		
+	}
+	
+	public static WebElement getPasswordTextBox()
+	{
+		WebElement element= driver.findElement(By.id("password"));
+		
+		return element;
+		
+	}
+	
+	public static WebElement getLoginButton()
+	{
+		WebElement element= driver.findElement(By.id("Login"));
+		
+		return element;
+		
+	}
+	
+	public WebElement getForgotPasswordLink()
+	{
+		WebElement element= driver.findElement(By.id("forgot_password_link"));
+		
+		return element;
+		
+	}
+	public WebElement getRememberMeCheckbox()
+	{
+		WebElement element= driver.findElement(By.id("rememberUn"));
+		
+		return element;
+		
+	}
+	
+	public WebElement getUseCustomDomainLink()
+	{
+		WebElement element= driver.findElement(By.id("mydomainLink"));
+		
+		return element;
+		
+	}
+	
+	
+	
+	}
+

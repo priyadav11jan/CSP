@@ -1,0 +1,63 @@
+package com.csp.system;
+
+import java.util.concurrent.TimeUnit;
+
+import org.openqa.selenium.By;
+import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WebElement;
+import org.openqa.selenium.chrome.ChromeDriver;
+import org.openqa.selenium.firefox.FirefoxDriver;
+import org.testng.Assert;
+import org.testng.annotations.AfterMethod;
+import org.testng.annotations.BeforeMethod;
+import org.testng.annotations.Test;
+
+
+	public class TestNG {
+		 
+		WebDriver driver=null;
+	 
+	  @Test(priority=-3,description="Test for login successful")
+	 
+	  public void loginSuccess() throws Exception
+	  
+	  {
+		  
+		  driver=new ChromeDriver();
+		   WebElement wb =driver.findElement(By.xpath("//a[contains(text(),'Sell')]"));
+		   wb.click();
+		   
+		   Thread.sleep(2000);
+		   
+		   String title=driver.getTitle();
+		   
+		   System.out.println(title);
+		   
+		   Assert.assertEquals(title,"Sell Online on Flipkart | Grow your business with the leader in Indian e-commerce", "Title is not matching");
+		   System.out.println("Sell online page is displayed");
+	 
+	  }
+	 
+	  @BeforeMethod
+	 
+	  public void beforeMethod() {
+	 
+		 System.setProperty("webdriver.chrome.driver","C:\\Users\\priyadav\\Downloads\\chromedriver_win32\\chromedriver.exe");
+			
+	      WebDriver driver = new ChromeDriver();
+	      driver.manage().window().maximize();
+	      driver.manage().timeouts().implicitlyWait(10, TimeUnit.SECONDS);
+	      driver.get("http://www.flipkart.com");
+	 
+	  }
+	 
+	  @AfterMethod
+	 
+	  public void afterMethod() {
+	 
+		  driver.quit();
+	 
+	  }
+	 
+	}
+

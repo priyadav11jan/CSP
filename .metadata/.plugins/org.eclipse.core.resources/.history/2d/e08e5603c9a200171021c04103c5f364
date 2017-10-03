@@ -1,0 +1,73 @@
+package com.pangaea.util;
+
+import java.util.concurrent.TimeUnit;
+
+import org.openqa.selenium.By;
+import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WebElement;
+import org.openqa.selenium.chrome.ChromeDriver;
+import org.testng.Assert;
+import org.testng.annotations.AfterMethod;
+import org.testng.annotations.BeforeMethod;
+import org.testng.annotations.BeforeTest;
+import org.testng.annotations.Test;
+import com.csp.config.*;
+
+public class TestClass {
+	
+	public WebDriver driver;
+	
+	 @BeforeMethod
+	 
+	  public void beforeMethod() {
+	 
+		 
+	 
+	      driver = new ChromeDriver();
+	      System.setProperty("C:\\Users\\priyadav\\Downloads\\chromedriver_win32\\chromedriver.exe","webdriver.chrome.driver");
+			
+	  	
+	  	
+	 
+	      driver.manage().window().maximize();
+			driver.manage().timeouts().implicitlyWait(30, TimeUnit.SECONDS);
+			driver.get("https://www.flipkart.com/");
+	 
+	  }
+	 
+
+	  @AfterMethod
+	 
+	  public void afterMethod() {
+	 
+		  // Close the driver
+	 
+	      driver.quit();
+	 
+	  }
+  
+   @Test(priority=-3,description="Test if user is able to login")
+   public void main() throws Exception{
+	   
+	   driver=new ChromeDriver();
+	   
+	   	
+		
+	  
+	  
+	WebElement wb =driver.findElement(By.xpath("//a[contains(text(),'Sell')]"));
+	   wb.click();
+	   
+	   Thread.sleep(2000);
+	   
+	   String title=driver.getTitle();
+	   
+	   Assert.assertEquals(title,"Sell Online on Flipkart | Grow your business with the leader in Indian e-commerce", "Title is not matching");
+	   System.out.println("Test completed"); 
+   }
+   
+   
+
+   
+
+}

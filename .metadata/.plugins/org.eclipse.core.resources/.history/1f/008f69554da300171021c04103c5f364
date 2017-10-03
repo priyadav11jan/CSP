@@ -1,0 +1,72 @@
+package com.csp.system;
+import org.openqa.selenium.By;
+import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.support.ui.ExpectedConditions;
+import org.openqa.selenium.support.ui.WebDriverWait;
+import org.testng.Assert;
+import org.testng.annotations.BeforeTest;
+import org.testng.annotations.Test;
+import com.csp.config.DriverFactory;
+import com.pangaea.ui.LoginPage;
+import com.pangaea.ui.Patient;
+import com.pangaea.ui.ShowAllTabs;
+import com.pangaea.util.GetData;
+
+public class TestPatient {
+	
+	WebDriver driver= DriverFactory.getdriverInstance();
+	
+	LoginPage login =new LoginPage(driver);
+	ShowAllTabs sat=new ShowAllTabs(driver);
+	Patient pt=new Patient(driver);
+	
+	String firstName= GetData.fromExcel("Test1","Sheet2",0,0);
+	String lastName= GetData.fromExcel("Test1","Sheet2",0,1);
+	
+	String un= GetData.fromExcel("Test1", "Sheet1",1, 0);
+	String pwd=GetData.fromExcel("Test1","Sheet1",1, 1);
+	
+	@BeforeTest
+	
+	public void validLogin(){
+				//Valid Login 
+			
+			
+			login.getUserNameTextBox().sendKeys(un);
+			login.getPasswordTextBox().sendKeys(pwd);
+			Assert.assertTrue(login.getLoginButton().isDisplayed(),"Button is not displayed");
+			login.getLoginButton().click();
+			
+			String actualTitle=driver.getTitle();
+			String expectedTitle= "Salesforce - Performance Edition";
+			Assert.assertEquals(actualTitle, expectedTitle,"Title does not match");
+			System.out.println("Valid login verified");
+			}
+	@Test
+	public void verifyPatient() throws InterruptedException{
+		
+		WebDriverWait wait= new WebDriverWait(driver,30);
+		wait.until(ExpectedConditions.elementToBeClickable(sat.getAllTabs()));
+		
+		
+		sat.getAllTabs().click();
+		
+		sat.getPatients().click();
+		driver.findElement(By.xpath("//input[@name='new']")).click();
+		
+			pt.getSaveButton().click();
+			
+			String error =driver.findElement(By.xpath(".//*[@id='errorDiv_ep']")).getText();
+			
+			System.out.println(error);
+	
+	
+		
+	}
+	
+	
+	
+	
+	
+
+}

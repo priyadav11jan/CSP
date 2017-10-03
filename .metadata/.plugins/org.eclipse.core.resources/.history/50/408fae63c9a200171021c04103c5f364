@@ -1,0 +1,9 @@
+package com.csp.system;
+
+import org.testng.annotations.Test;
+
+public class TestNG {
+  @Test
+  public void f() {
+  }
+}

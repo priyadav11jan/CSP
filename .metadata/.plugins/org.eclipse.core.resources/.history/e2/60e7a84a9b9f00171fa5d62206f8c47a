@@ -1,0 +1,39 @@
+package com.csp.system;
+
+import org.testng.annotations.Test;
+
+import com.csp.config.DriverFactory;
+import com.pangaea.ui.LoginPage;
+import com.pangaea.ui.ShowAllTabs;
+import com.pangaea.util.GetData;
+
+import org.testng.annotations.BeforeMethod;
+import org.openqa.selenium.WebDriver;
+import org.testng.annotations.AfterMethod;
+
+public class TestLogin001 {
+  @Test
+  public void Login001() {
+	  
+	  	LoginPage.getUserNameTextBox().sendKeys(un);
+		LoginPage.getPasswordTextBox().sendKeys(pwd);
+  						}
+  @BeforeMethod
+  public void beforeMethod() {
+	  
+			WebDriver driver=DriverFactory.getdriverInstance();
+			LoginPage login=new LoginPage(driver);
+			ShowAllTabs sal=new ShowAllTabs(driver);
+			
+			String un=GetData.fromExcel("Test1","Sheet1",1,0);
+			String pwd=GetData.fromExcel("Test1","Sheet1",2,1);
+			
+		
+  }
+
+  @AfterMethod
+  public void afterMethod() {
+	  driver.close();
+  }
+
+}

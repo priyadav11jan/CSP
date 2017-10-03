@@ -1,0 +1,125 @@
+package com.csp.system;
+
+import static org.testng.Assert.assertEquals;
+
+import org.openqa.selenium.By;
+import org.openqa.selenium.JavascriptExecutor;
+import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WebElement;
+import org.openqa.selenium.support.ui.ExpectedConditions;
+import org.openqa.selenium.support.ui.WebDriverWait;
+import org.testng.Assert;
+import org.testng.annotations.AfterMethod;
+import org.testng.annotations.BeforeTest;
+import org.testng.annotations.Test;
+import org.testng.asserts.SoftAssert;
+
+import com.csp.config.DriverFactory;
+import com.gargoylesoftware.htmlunit.javascript.background.JavaScriptExecutor;
+import com.pangaea.ui.LoginPage;
+import com.pangaea.ui.Patient;
+import com.pangaea.ui.ShowAllTabs;
+import com.pangaea.util.GetData;
+import com.pangaea.util.Picklists;
+import com.pangaea.util.Screenshots;
+
+public class TestPatient {
+	
+	WebDriver driver= DriverFactory.getdriverInstance();
+	
+	LoginPage login =new LoginPage(driver);
+	ShowAllTabs sat=new ShowAllTabs(driver);
+	Patient pt=new Patient(driver);
+	
+	String firstName= GetData.fromExcel("Test1","Sheet2",0,0);
+	String lastName= GetData.fromExcel("Test1","Sheet2",0,1);
+	
+	String un= GetData.fromExcel("Test1", "Sheet1",1, 0);
+	String pwd=GetData.fromExcel("Test1","Sheet1",1, 1);
+	
+	
+	
+	@BeforeTest
+	
+	public void validLogin() throws Exception{
+				//Valid Login 
+			
+			
+			login.getUserNameTextBox().sendKeys(un);
+			login.getPasswordTextBox().sendKeys(pwd);
+			Assert.assertTrue(login.getLoginButton().isDisplayed(),"Button is not displayed");
+			login.getLoginButton().click();
+			
+			
+			Thread.sleep(2000);
+			
+			String actualTitle=driver.getTitle();
+			String expectedTitle= "Salesforce - Performance Edition";
+			Assert.assertEquals(actualTitle, expectedTitle,"Title does not match");
+			System.out.println("Valid login verified");
+			
+			//Click on expand
+			sat.getAllTabs().click();
+		
+		
+			//scroll to patients
+			JavascriptExecutor jse= (JavascriptExecutor)driver;
+			jse.executeScript("window.scroll(0,500)");
+		
+			//click Patients
+			sat.getPatients().click();
+			
+			//click new button
+			driver.findElement(By.xpath("//input[@name='new']")).click();
+			
+			}
+	@Test(priority=0,description ="Patient record submitted successfully")
+	public void verifyPatient() throws Exception{
+		
+			//save values in required fields
+			pt.getFirstNameTextBox().sendKeys(firstName);
+			pt.getLastNameTextBox().sendKeys(lastName);
+			pt.getEmailTextBox().sendKeys("priyadav@deloitte.com");
+			Picklists.selectPicklistByValue(pt.getGenderPicklist(),"F");
+			pt.getSaveButton().click();
+			
+			
+		}
+	
+	@Test(priority= -1,description ="Error message for required fields verified.PFA screenshot")
+	public void verifyError() throws Exception
+	{
+		pt.getFirstNameTextBox().sendKeys("");
+		pt.getLastNameTextBox().sendKeys("");
+		
+		//Verify Error message
+		String actualError =driver.findElement(By.xpath(".//*[@id='errorDiv_ep']")).getText();
+
+		String expectedError="Error: Invalid Data."+"\r\n"+"Review all error messages below to correct your data.";
+		
+		SoftAssert sa= new SoftAssert();
+		sa.assertEquals(actualError, expectedError,"Error is not matching");
+		
+		System.out.println(actualError);
+		
+		Screenshots.captureScreenshots(driver,"Error");
+		sa.assertAll();
+		
+		
+	}
+	
+	@AfterMethod
+	public void postCondition()
+	{
+		driver.quit();
+	}
+	
+	
+	
+	
+	
+	
+	
+	
+
+}
